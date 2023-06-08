@@ -53,5 +53,5 @@ async def self(interaction: discord.Interaction, test: str):
     await interaction.response.send_message(embed=ok)
     
     
-tok = "MTExMzg2MTE3MjQ1ODk1ODkzOQ.GRo5J8.hFbfq6rqk-iOL-5_edYIQPOY4T88B6L1IvvSTY"
+tok = ""
 bot.run(tok)
