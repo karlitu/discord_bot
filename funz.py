@@ -11,3 +11,11 @@ def find_name(member_list):
 def save(data, filename):
     with open(filename, 'w') as json_file:
         json.dump(data, json_file)
+
+
+
+def read_token(file):
+    with open(file, 'r') as f:
+        dati = json.load(f)
+    var = dati['token']
+    return var

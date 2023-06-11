@@ -53,5 +53,6 @@ async def self(interaction: discord.Interaction, test: str):
     await interaction.response.send_message(embed=ok)
     
     
-tok = ""
+perc = "C:\\Users\\giaco\\Desktop\\Token.json"
+tok = f.read_token(perc)
 bot.run(tok)
