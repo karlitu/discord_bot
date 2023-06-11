@@ -25,7 +25,7 @@ def read_var(file, variable):
 
 def log(file, pers, dove, join):
     with open(file, 'a') as f:
-        ora = time.strftime('%a %b %d %H:%M:%S %Y')
+        ora = time.strftime('%d %m %Y %H:%M:%S')
         if join:
             join = "join"
         elif join == False:
