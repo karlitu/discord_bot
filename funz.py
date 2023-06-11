@@ -1,5 +1,6 @@
 import json
-
+import time
+perc = "C:\\Users\\giaco\\Desktop\\Token.json"
 
 def find_name(member_list):
     names = []
@@ -14,8 +15,27 @@ def save(data, filename):
 
 
 
-def read_token(file):
+def read_var(file, variable):
     with open(file, 'r') as f:
         dati = json.load(f)
-    var = dati['token']
+    var = dati[variable]
+    print(type(var))
     return var
+
+
+def log(file, pers, dove, join):
+    with open(file, 'a') as f:
+        ora = time.strftime('%a %b %d %H:%M:%S %Y')
+        if join:
+            join = "join"
+        elif join == False:
+            join = "quit"
+        else:
+            join = "error"
+        f.write(f"{ora};{pers};{dove};{join}\n")
+
+    
+
+if __name__ == '__main__':
+    perc = "C:\\Users\\giaco\\Desktop\\Token.json"
+    print(read_var(perc, "channel_id"))
