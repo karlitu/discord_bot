@@ -19,7 +19,6 @@ def read_var(file, variable):
     with open(file, 'r') as f:
         dati = json.load(f)
     var = dati[variable]
-    print(type(var))
     return var
 
 
