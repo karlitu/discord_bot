@@ -65,10 +65,26 @@ async def self(interaction: discord.Interaction, user: str):
         emb = f.embed("list song", f"{user}'s song list")
         for i in range(0, len(song)):
             emb.add_field(name="number", value=i+1, inline=True)
-            emb.add_field(name="song", value=song[i], inline=True)
-            emb.add_field(name="" ,value="", inline=True)
+            emb.add_field(name="song", value=song[i][0], inline=True)
+            emb.add_field(name="author" ,value=song[i][1], inline=True)
         await interaction.response.send_message(embed=emb)
 
+
+@tree.command(name="add", description="add song in your list", guild=discord.Object(id=f.read_var(f.perc, "server_id")))
+async def self(interaction: discord.Interaction, title: str, author: str):
+    user_id = str(interaction.user.id)
+    if user_id not in f.read_var("song.json", "user"):
+        emb = f.embed("list error", f"<@{user_id}>'s list doesn't exist")
+        await interaction.response.send_message(embed=emb)
+    else:
+        if f.very_present("song.json", user_id, title):   
+            emb = f.embed("song error", f"{title} is already in")
+            await interaction.response.send_message(embed=emb)
+        else:
+            f.change_var("song.json", user_id, [title, author])
+            list = f.read_var("song.json", user_id)
+            emb = f.embed("song confirm", f"added in yout list {list[len(list)-1]}")
+            await interaction.response.send_message(embed=emb)
 
 tok = f.read_var(f.perc, "token")
 bot.run(tok)

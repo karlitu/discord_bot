@@ -14,10 +14,12 @@ def find_name(member_list):
     return names
 
     
-def save(data, filename):
-    with open(filename, 'w') as json_file:
-        json.dump(data, json_file)
-
+def change_var(filename, var_name, data):
+    with open(filename, 'r') as f:
+        datas = json.load(f)
+    datas[var_name].append(data)
+    with open(filename, 'w') as f:
+        json.dump(datas, f)
 
 
 def read_var(file, variable):
@@ -47,7 +49,8 @@ def control_log(before, after, member):
     else:
         log(log_file, member, before.channel.name, False)
         log(log_file, member, after.channel.name, True)
-    
+
+
 def embed(title, description):
     ok = discord.Embed(
       title=f"{title}",
@@ -78,3 +81,11 @@ def get_id(tag):
         return tag[2:-1]
     else:
         return None
+    
+    
+def very_present(filename, var, cosa):
+    data = read_var(filename, var)
+    for ele in data:
+        if cosa in ele[0]:
+            return True
+    return False
