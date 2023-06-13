@@ -22,6 +22,13 @@ def change_var(filename, var_name, data):
         json.dump(datas, f)
 
 
+def add_var(filename, var_name, data):
+    with open(filename, 'r') as f:
+        datas = json.load(f)
+    datas[var_name] = data
+    with open(filename, 'w') as f:
+        json.dump(datas, f)
+
 def read_var(file, variable):
     with open(file, 'r') as f:
         dati = json.load(f)

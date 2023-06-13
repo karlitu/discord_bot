@@ -83,8 +83,21 @@ async def self(interaction: discord.Interaction, title: str, author: str):
         else:
             f.change_var("song.json", user_id, [title, author])
             list = f.read_var("song.json", user_id)
-            emb = f.embed("song confirm", f"added in yout list {list[len(list)-1]}")
+            emb = f.embed("song confirm", f"added in yout list {list[len(list)-1][0]} by {list[len(list)-1][1]}")
             await interaction.response.send_message(embed=emb)
 
+
+@tree.command(name="list", description="add list for your songs", guild=discord.Object(id=f.read_var(f.perc, "server_id")))
+async def self(interaction: discord.Interaction):
+    user_id = str(interaction.user.id)
+    if user_id  in f.read_var("song.json", "user"):
+        emb = f.embed("list error", f"<@{user_id}>'s list already exist")
+        await interaction.response.send_message(embed=emb)
+    else:
+        f.change_var("song.json", "user", user_id)
+        f. add_var("song.json", user_id, [])
+        emb = f.embed("list confirm", f"<@{user_id}'s list create")
+        await interaction.response.send_message(embed=emb)
+            
 tok = f.read_var(f.perc, "token")
 bot.run(tok)
