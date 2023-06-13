@@ -96,7 +96,7 @@ async def self(interaction: discord.Interaction):
     else:
         f.change_var("song.json", "user", user_id)
         f. add_var("song.json", user_id, [])
-        emb = f.embed("list confirm", f"<@{user_id}'s list create")
+        emb = f.embed("list confirm", f"<@{user_id}>'s list create")
         await interaction.response.send_message(embed=emb)
             
 tok = f.read_var(f.perc, "token")
