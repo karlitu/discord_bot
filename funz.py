@@ -1,6 +1,7 @@
 import json
 import time
-perc = "C:\\Users\\giaco\\Desktop\\Token.json"
+perc = "C:\\Users\\giaco\\Desktop\\Robe.json"
+log_file = "log.csv"
 
 def find_name(member_list):
     names = []
@@ -33,6 +34,15 @@ def log(file, pers, dove, join):
             join = "error"
         f.write(f"{ora};{pers};{dove};{join}\n")
 
+
+def control_log(before, after, member):
+    if before.channel == None:
+        log(log_file, member, after.channel.name, True)
+    elif after.channel == None:
+        log(log_file, member, before.channel.name, False)
+    else:
+        log(log_file, member, before.channel.name, False)
+        log(log_file, member, after.channel.name, True)
     
 
 if __name__ == '__main__':
