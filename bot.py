@@ -4,7 +4,6 @@ from discord.ext import commands
 from discord import app_commands
 from discord.ext.commands import bot
 import funz as f
-from colorama import Fore, Back, Style
 
 
 bot = commands.Bot(command_prefix="/", intents=discord.Intents.all(), description="")
@@ -18,8 +17,7 @@ class abot(discord.Client):
   async def on_ready(self):
     await tree.sync(guild=discord.Object(id=f.read_var(f.perc, "server_id")))
     self.synced = True
-    print(Back.MAGENTA + Fore.BLACK + f"bot{bot.user.name} startato: {time.strftime('%a %b %d %H:%M:%S %Y')}")
-    print(Style.RESET_ALL, end="")
+    print(f"bot{bot.user.name} startato: {time.strftime('%a %b %d %H:%M:%S %Y')}")
 
 
 
@@ -33,19 +31,43 @@ async def on_voice_state_update(member, before, after):
         
     channel = bot.get_channel(f.read_var(f.perc, "channel_id"))
     if channel and len(channel.members) >=1:
-        f.save(f.find_name(channel.members), "variables.json")
         if bot.voice_clients and len(channel.members)==1:
-            print(Back.RED + Fore.BLACK + Style.BRIGHT + 'bot left')
-            print(Style.RESET_ALL, end="")
+            print('bot left')
             voice_client = bot.voice_clients[0]
             await voice_client.disconnect()
-            f.save(f.find_name(channel.members), "variables.json")
             return
         if bot.voice_clients:
             return
-        print(Back.GREEN + Fore.BLACK + Style.BRIGHT + 'Bot joined')
-        print(Style.RESET_ALL, end="")
+        print('Bot joined')
         await channel.connect()
+
+
+@tree.command(name="people", description="vedi persone in canale", guild=discord.Object(id=f.read_var(f.perc, "server_id")))
+async def self(interaction: discord.Interaction):
+    channel = bot.get_channel(f.read_var(f.perc, "channel_id"))
+    people = f.find_name(channel.members)
+    emb = f.embed("list people", f"now there are {len(people)} people")
+    for i in range(0, len(people)):
+        emb.add_field(name="number", value=i+1, inline=True)
+        emb.add_field(name="name", value=people[i], inline=True)
+        emb.add_field(name="" ,value="", inline=True)
+    await interaction.response.send_message(embed=emb)
+
+
+@tree.command(name="show", description="show somebody's song list", guild=discord.Object(id=f.read_var(f.perc, "server_id")))
+async def self(interaction: discord.Interaction, user: str):
+    user_id = f.get_id(user)
+    if user_id not in f.read_var("song.json", "user"):
+        emb = f.embed("list error", f"{user}'s list doesn't exist")
+        await interaction.response.send_message(embed=emb)
+    else:
+        song = f.read_var("song.json", user_id)
+        emb = f.embed("list song", f"{user}'s song list")
+        for i in range(0, len(song)):
+            emb.add_field(name="number", value=i+1, inline=True)
+            emb.add_field(name="song", value=song[i], inline=True)
+            emb.add_field(name="" ,value="", inline=True)
+        await interaction.response.send_message(embed=emb)
 
 
 tok = f.read_var(f.perc, "token")
