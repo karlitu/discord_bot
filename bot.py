@@ -21,6 +21,7 @@ class abot(discord.Client):
     await tree.sync(guild=discord.Object(id=f.read_var(perc, "server_id")))
     self.synced = True
     print(Back.MAGENTA + Fore.BLACK + f"bot{bot.user.name} startato: {time.strftime('%a %b %d %H:%M:%S %Y')}")
+    print(Style.RESET_ALL, end="")
 
 
 
@@ -42,30 +43,17 @@ async def on_voice_state_update(member, before, after):
     if channel and len(channel.members) >=1:
         f.save(f.find_name(channel.members), "variables.json")
         if bot.voice_clients and len(channel.members)==1:
-            print(Back.RED + Fore.BLACK.capitalize + Style.BRIGHT + 'bot left')
+            print(Back.RED + Fore.BLACK + Style.BRIGHT + 'bot left')
+            print(Style.RESET_ALL, end="")
             voice_client = bot.voice_clients[0]
             await voice_client.disconnect()
             f.save(f.find_name(channel.members), "variables.json")
             return
         if bot.voice_clients:
             return
+        print(Back.GREEN + Fore.BLACK + Style.BRIGHT + 'Bot joined')
+        print(Style.RESET_ALL, end="")
         await channel.connect()
-        print(Back.GREEN + Fore.BLACK.capitalize + Style.BRIGHT + 'Bot joined')
-
-
-
-@tree.command(name="people", description="vedi persone in canale", guild=discord.Object(id=f.read_var(perc, "server_id")))
-async def self(interaction: discord.Interaction):
-    channel = bot.get_channel(f.read_var(perc, "channel_id"))
-    f.save(f.find_name(channel.members), "variables.json")
-    print(f.find_name(channel.members))
-
-    ok = discord.Embed(
-      title=f"test",
-      description=
-      f"fatto",
-      colour=0xff00ff)
-    await interaction.response.send_message(embed=ok)
 
 
 tok = f.read_var(perc, "token")
