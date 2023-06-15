@@ -4,7 +4,7 @@ import time
 from discord.ext import commands
 from discord import app_commands
 from discord.ext.commands import bot
-perc = "C:\\Users\\giaco\\Desktop\\Robe.json"
+perc = "C:\\Users\\giaco\\Desktop\\Robe.json" #percorso del tuo file - 2 per ivana
 log_file = "log.csv"
 
 def find_name(member_list):
@@ -28,6 +28,7 @@ def add_var(filename, var_name, data):
     datas[var_name] = data
     with open(filename, 'w') as f:
         json.dump(datas, f)
+
 
 def read_var(file, variable):
     with open(file, 'r') as f:
@@ -93,6 +94,23 @@ def get_id(tag):
 def very_present(filename, var, cosa):
     data = read_var(filename, var)
     for ele in data:
-        if cosa in ele[0]:
+        if cosa == ele[0]:
             return True
     return False
+
+
+def take_position(cosa, dove):
+    for i in range(len(dove)):
+        if cosa == dove[i][0]:
+            return i
+
+    
+def del_song(title, id):
+    dati = read_var("song.json", id)
+    p = take_position(title, dati)
+    with open("song.json", 'r') as f:
+        datas = json.load(f)
+    del datas[id][p]
+    with open("song.json", 'w') as f:
+        json.dump(datas, f)
+        

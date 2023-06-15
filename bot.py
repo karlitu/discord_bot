@@ -27,8 +27,7 @@ tree = app_commands.CommandTree(bot)
 
 @bot.event
 async def on_voice_state_update(member, before, after):
-    f.control_log(before, after, member)
-        
+    f.control_log(before, after, member) 
     channel = bot.get_channel(f.read_var(f.perc, "channel_id"))
     if channel and len(channel.members) >=1:
         if bot.voice_clients and len(channel.members)==1:
@@ -42,7 +41,7 @@ async def on_voice_state_update(member, before, after):
         await channel.connect()
 
 
-@tree.command(name="people", description="vedi persone in canale", guild=discord.Object(id=f.read_var(f.perc, "server_id")))
+@tree.command(name="people", description="show people in the channel", guild=discord.Object(id=f.read_var(f.perc, "server_id")))
 async def self(interaction: discord.Interaction):
     channel = bot.get_channel(f.read_var(f.perc, "channel_id"))
     people = f.find_name(channel.members)
@@ -50,7 +49,7 @@ async def self(interaction: discord.Interaction):
     for i in range(0, len(people)):
         emb.add_field(name="number", value=i+1, inline=True)
         emb.add_field(name="name", value=people[i], inline=True)
-        emb.add_field(name="" ,value="", inline=True)
+        emb.add_field(name="", value="", inline=True)
     await interaction.response.send_message(embed=emb)
 
 
@@ -78,12 +77,12 @@ async def self(interaction: discord.Interaction, title: str, author: str):
         await interaction.response.send_message(embed=emb)
     else:
         if f.very_present("song.json", user_id, title):   
-            emb = f.embed("song error", f"{title} is already in")
+            emb = f.embed("song error", f"{title} is already in the list")
             await interaction.response.send_message(embed=emb)
         else:
             f.change_var("song.json", user_id, [title, author])
             list = f.read_var("song.json", user_id)
-            emb = f.embed("song confirm", f"added in yout list {list[len(list)-1][0]} by {list[len(list)-1][1]}")
+            emb = f.embed("song confirm", f"{list[len(list)-1][0]} by {list[len(list)-1][1]} was added to your list")
             await interaction.response.send_message(embed=emb)
 
 
@@ -96,8 +95,25 @@ async def self(interaction: discord.Interaction):
     else:
         f.change_var("song.json", "user", user_id)
         f. add_var("song.json", user_id, [])
-        emb = f.embed("list confirm", f"<@{user_id}>'s list create")
+        emb = f.embed("list confirm", f"<@{user_id}>'s list created")
         await interaction.response.send_message(embed=emb)
-            
+
+
+@tree.command(name="del", description="delete song in your list", guild=discord.Object(id=f.read_var(f.perc, "server_id")))
+async def self(interaction: discord.Interaction, title: str):
+    user_id = str(interaction.user.id)
+    if user_id not in f.read_var("song.json", "user"):
+        emb = f.embed("list error", f"<@{user_id}>'s list dont't exist")
+        await interaction.response.send_message(embed=emb)
+    else:
+        if f.very_present("song.json", user_id, title):
+            f.del_song(title, user_id)
+            emb = f.embed("delete confirm", f"{title} is deleted")
+            await interaction.response.send_message(embed=emb)
+        else:
+            emb=f.embed("delite error", f"{title} doesn't exist")
+            await interaction.response.send_message(embed=emb)
+
+
 tok = f.read_var(f.perc, "token")
 bot.run(tok)
