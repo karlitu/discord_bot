@@ -1,0 +1,20 @@
+{
+  "name": "noh",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.4.0",
+    "discord.js": "^13.16.0",
+    "dotenv": "^16.3.1",
+    "lib": "^5.0.1",
+    "yt-search": "^2.10.4",
+    "ytdl-core": "^4.11.5"
+  }
+}
