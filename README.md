@@ -1,2 +1,3 @@
-# discord_bot
-simple discord bot, it logs the connection to a voice channel and when at least one person is connected to a channel, it joins the conversation and quit when everybody quits.
+# discord bots
+### two bots working together to play music
+These two bots, one developed in python, the other in node.js, can play music in voice chat according to the users' preferences.
