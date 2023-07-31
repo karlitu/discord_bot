@@ -1,5 +1,6 @@
 const { Client } = require("discord.js");
-const f = require("./funz.js");
+const f = require("./basicFunctions.js");
+const ff = require("./secondaryFunctions.js");
 const client = new Client({
     intents:[
         "Guilds",
@@ -21,11 +22,10 @@ client.on("ready", () => {
         let message = msg.content;
         if (message.startsWith(prefix)){
             command = f.split_arg(message)
-            console.log(command);
             switch (command[0]) {
                 case "join":
                     connection = f.joins(msg);
-                    connection;
+                    f.checkAndConnect(connection);
                     break;
                 case "exit":
                     console.log("exit");
@@ -33,13 +33,11 @@ client.on("ready", () => {
                     break;
                     case "play":
                         connection = f.joins(msg);
-                        try {
-                            connection;
-                        } catch (error) {
-                            console.log("unable to connect")
-                        };
-                        f.songInfo(command[1], msg);
-                        f.playSong(command[1]);
+                        f.checkAndConnect(connection, msg);
+                        if (connection){
+                            f.songInfo(command[1], msg);
+                            f.playSong(command[1]);   
+                        }
                         break;
                 default:
                     break;
