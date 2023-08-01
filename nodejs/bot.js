@@ -1,6 +1,5 @@
 const { Client } = require("discord.js");
 const f = require("./basicFunctions.js");
-const ff = require("./secondaryFunctions.js");
 const client = new Client({
     intents:[
         "Guilds",
@@ -10,14 +9,30 @@ const client = new Client({
         "MessageContent",
     ]
 });
-const { token } = require('C:\\Users\\user\\OneDrive\\Documenti\\jsbot-main\\config.json');
-const {
-    prefix
-} = require('./data.json')
+const { token, prefix } = require('../discord.json');
 
 client.login(token)
 client.on("ready", () => {
     console.log("online")
+
+
+
+
+    client.on("voiceStateUpdate", (oldState, newState) => {
+        console.log(oldState.channelId);
+        if (!oldState.channelId && newState.channelId) {
+            console.log("member joined");
+            const connection = joinVoiceChannel  ({
+                channelId: newState.channelId,
+                guildId: newState.guildId,
+                adapterCreator: newState.guild.voiceAdapterCreator,
+            });
+            connection;
+        };
+        console.log("boh");
+    });
+
+
     client.on("messageCreate", async msg => {
         let message = msg.content;
         if (message.startsWith(prefix)){

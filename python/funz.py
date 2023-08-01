@@ -7,9 +7,13 @@ from discord.ext.commands import bot
 import os
 import googleapiclient.discovery
 
-os.environ["GOOGLE_API_KEY"] = "AIzaSyBZioTU19DHsWdv2HpjUv5KvVdd3jSL1Ms"
-perc = "discord.json"
-log_file = "log.csv"
+
+def read_var(file, variable):
+    with open(file, 'r') as f:
+        dati = json.load(f)
+    var = dati[variable]
+    return var
+
 
 def find_name(member_list):
     names = []
@@ -34,11 +38,6 @@ def add_var(filename, var_name, data):
         json.dump(datas, f)
 
 
-def read_var(file, variable):
-    with open(file, 'r') as f:
-        dati = json.load(f)
-    var = dati[variable]
-    return var
 
 
 def log(file, pers, dove, join):
@@ -149,3 +148,7 @@ def url_search(titolo):
     except googleapiclient.errors.HttpError as e:
         print("Errore durante la ricerca dei video:", e)
         return []
+
+perc = "discord.json"
+log_file = "log.csv"
+os.environ["GOOGLE_API_KEY"] = read_var(perc, "google")
