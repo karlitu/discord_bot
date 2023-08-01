@@ -4,7 +4,11 @@ import time
 from discord.ext import commands
 from discord import app_commands
 from discord.ext.commands import bot
-perc = "C:\\Users\\giaco\\Desktop\\Robe.json" #percorso del tuo file - 2 per ivana
+import os
+import googleapiclient.discovery
+
+os.environ["GOOGLE_API_KEY"] = "AIzaSyBZioTU19DHsWdv2HpjUv5KvVdd3jSL1Ms"
+perc = "discord.json"
 log_file = "log.csv"
 
 def find_name(member_list):
@@ -113,4 +117,35 @@ def del_song(title, id):
     del datas[id][p]
     with open("song.json", 'w') as f:
         json.dump(datas, f)
-        
+
+def if_bot(list):
+    for i in range(len(list)):
+        if list[i].id == 1133116070190907543:
+            return True
+    return False
+
+
+
+def url_search(titolo):
+    youtube = googleapiclient.discovery.build("youtube", "v3", developerKey=os.getenv("GOOGLE_API_KEY"))
+
+    try:
+        search_response = youtube.search().list(
+            q=titolo,
+            part="id",
+            maxResults=5,
+            type="video"
+        ).execute()
+
+        video_links = []
+        for search_result in search_response.get("items", []):
+            if search_result["id"]["kind"] == "youtube#video":
+                video_id = search_result["id"]["videoId"]
+                video_link = f"https://www.youtube.com/watch?v={video_id}"
+                video_links.append(video_link)
+
+        return video_links
+
+    except googleapiclient.errors.HttpError as e:
+        print("Errore durante la ricerca dei video:", e)
+        return []

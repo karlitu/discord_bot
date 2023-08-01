@@ -20,7 +20,6 @@ class abot(discord.Client):
     print(f"bot{bot.user.name} startato: {time.strftime('%a %b %d %H:%M:%S %Y')}")
 
 
-
 bot = abot()
 tree = app_commands.CommandTree(bot)
 
@@ -37,8 +36,12 @@ async def on_voice_state_update(member, before, after):
             return
         if bot.voice_clients:
             return
-        print('Bot joined')
-        await channel.connect()
+        if not(f.if_bot(channel.members)):
+            print('Bot joined')
+            await channel.connect()
+            await channel.send("§join")
+            voice_client = bot.voice_clients[0]
+            await voice_client.disconnect()
 
 
 @tree.command(name="people", description="show people in the channel", guild=discord.Object(id=f.read_var(f.perc, "server_id")))
@@ -80,10 +83,15 @@ async def self(interaction: discord.Interaction, title: str, author: str):
             emb = f.embed("song error", f"{title} is already in the list")
             await interaction.response.send_message(embed=emb)
         else:
-            f.change_var("song.json", user_id, [title, author])
-            list = f.read_var("song.json", user_id)
-            emb = f.embed("song confirm", f"{list[len(list)-1][0]} by {list[len(list)-1][1]} was added to your list")
-            await interaction.response.send_message(embed=emb)
+            link = f.url_search(title+ " " + author)
+            if len(link)==0:
+                emb = f.embed("song error", f"<@{user_id}>'s song doesn't find")
+                await interaction.response.send_message(embed=emb)
+            else:
+                f.change_var("song.json", user_id, link[0])
+                list = f.read_var("song.json", user_id)
+                emb = f.embed("song confirm", f"{list[len(list)-1][0]} by {list[len(list)-1][1]} was added to your list")
+                await interaction.response.send_message(embed=emb)
 
 
 @tree.command(name="list", description="add list for your songs", guild=discord.Object(id=f.read_var(f.perc, "server_id")))
@@ -115,5 +123,5 @@ async def self(interaction: discord.Interaction, title: str):
             await interaction.response.send_message(embed=emb)
 
 
-tok = f.read_var(f.perc, "token")
+tok = f.read_var(f.perc, "figliolo")
 bot.run(tok)
